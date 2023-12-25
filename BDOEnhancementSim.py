@@ -11,9 +11,10 @@ def test_run(baseProp, propRateChange):
 
 
 if __name__ == "__main__":
-    baseProp = float(input("Base propabiblity:"))
-    propRateChange = float(input("Rate of change per fail:"))
-    numRuns = int(input("Number of runs:"))
+    baseProp = float(input("Base propabiblity: "))
+    propRateChange = float(input("Rate of change per fail: "))
+    numRuns = int(input("Number of runs: "))
+    numTaps = int(input("Number of taps: "))
 
     totNumber = 0
     maxRuns = 0
@@ -28,7 +29,17 @@ if __name__ == "__main__":
         else:
             bins[run] = 1
         allRuns.append(run)
-    print(f"Average Number of Runs: {totNumber/numRuns}")
+    averageRuns = totNumber/numRuns
+    print(f"Average Number of Runs: {averageRuns}")
     print(f"Max Runs: {maxRuns}")
-    print(f"Bins: {dict(sorted(bins.items()))}")
-    print(f"All Runs: {allRuns}")
+    #print(f"Bins: {dict(sorted(bins.items()))}")
+    #print(f"All Runs: {allRuns}")
+    atOrLower = 0
+    above = 0
+    for x in allRuns:
+        if x <= numTaps:
+            atOrLower += 1
+        else:
+            above += 1
+    print(f"Lower: {atOrLower}")
+    print(f"Higher: {above}")
