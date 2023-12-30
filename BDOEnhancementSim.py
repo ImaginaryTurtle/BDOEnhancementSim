@@ -9,8 +9,7 @@ def test_run(baseProp, propRateChange):
         success = random.choices([True, False], weights=[prop, (1-prop)], k=1)[0]
     return n
 
-
-if __name__ == "__main__":
+def mythic_horse():
     baseProp = float(input("Base propabiblity: "))
     propRateChange = float(input("Rate of change per fail: "))
     numRuns = int(input("Number of runs: "))
@@ -43,3 +42,30 @@ if __name__ == "__main__":
             above += 1
     print(f"Lower: {atOrLower}")
     print(f"Higher: {above}")
+
+    def accessory():
+        return 0
+
+    def boss_gear():
+        return 0
+
+if __name__ == "__main__":
+    print("Select Type: \
+    \n1. T9 & T10 Horse \
+    \n2. Accessories \
+    \n3. Boss Gear")
+
+    while True:
+        userSelection = input("Input: ")
+        if userSelection == "1":
+            mythic_horse()
+            break
+        elif userSelection == "2":
+            accessory()
+            break
+        elif userSelection == "3":
+            boss_gear()
+            break
+        else:
+            print("Invalid Selection \
+            \nExample: '1' for T9 or T10 Horse Enhancement")
