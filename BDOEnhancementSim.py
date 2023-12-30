@@ -43,11 +43,36 @@ def mythic_horse():
     print(f"Lower: {atOrLower}")
     print(f"Higher: {above}")
 
-    def accessory():
-        return 0
+def accessory_tap(successRate, downgradeChance):
+    success = random.choices([True, False], weights=[successRate, (1-successRate)], k=1)[0]
 
-    def boss_gear():
-        return 0
+    if not success:
+        downgrade = random.choices([True, False], weights=[downgradeChance, (1-downgradeChance)], k=1)[0]
+        if downgrade:
+            return "downgrade"
+        else:
+            return "fail"
+    else:
+        return "success"
+
+def accessory():
+    cronNumber = [62,187,562,1562,7499]
+    cronCost = 1.642
+    successRates = [.72,.53,.4215,.3025,.1325]
+    downgradeChance = 0.4
+
+    for n in range(len(successRates)):
+        resultDict = {"success" : 0,
+                        "fail" : 0,
+                        "downgrade" : 0}
+        for x in range(100000):
+            result = accessory_tap(successRates[n], downgradeChance)
+            resultDict[result] += 1
+        print(f"{n} Result: {resultDict}")
+
+
+def boss_gear():
+    return 0
 
 if __name__ == "__main__":
     print("Select Type: \
