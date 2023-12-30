@@ -56,19 +56,93 @@ def accessory_tap(successRate, downgradeChance):
         return "success"
 
 def accessory():
+    #Debo Earring:
+    #cronNumber = [95,288,865,2405,11548]
+    #cronCost = 1.642
+    #accessoryValues = [825,2470,7400,20600,99000,300000]
+
+    #Disto:
     cronNumber = [62,187,562,1562,7499]
     cronCost = 1.642
-    successRates = [.72,.53,.4215,.3025,.1325]
+    accessoryValues = [342,870,2700,8000,25300,165000]
+    
+    #Stacks =  number : chance
+    #   Pri =  22 : .72, 58 : .90
+    #   Duo =  42 : .504, 80 : .58
+    #   Tri =  44 : .405, 110 : .504
+    #   Tet =  110 : .30, 130 : .31
+    #   Pen =  255 : .1325, 275 : .1425
+
+    successRates = [.72,.504,.405,.30,.1325]
     downgradeChance = 0.4
 
     for n in range(len(successRates)):
+        
         resultDict = {"success" : 0,
                         "fail" : 0,
                         "downgrade" : 0}
+        noCronDict = {"success" : 0,
+                      "fail" : 0}
+
         for x in range(100000):
             result = accessory_tap(successRates[n], downgradeChance)
-            resultDict[result] += 1
-        print(f"{n} Result: {resultDict}")
+            if result == "success":
+                resultDict[result] += (accessoryValues[n+1] - (accessoryValues[n] + accessoryValues[0] + (cronCost * cronNumber[n])))
+                noCronDict[result] += (accessoryValues[n+1] - (accessoryValues[n] + accessoryValues[0]))
+            elif result == "fail":
+                resultDict[result] += (-1*(accessoryValues[0] + (cronCost * cronNumber[n])))
+                noCronDict[result] += (-1*(accessoryValues[n] + accessoryValues[0]))
+            else:
+                resultDict[result] += (accessoryValues[max(n-1,0)] - (accessoryValues[n] + accessoryValues[0] + (cronCost * cronNumber[n])))
+                noCronDict["fail"] += (-1*(accessoryValues[n] + accessoryValues[0]))
+
+        for i in resultDict.keys():
+            resultDict[i] = resultDict[i]/100000
+
+        for i in noCronDict.keys():
+            noCronDict[i] = noCronDict[i]/100000
+
+        cronProfits = sum(resultDict.values())
+        noCronProfits = sum(noCronDict.values())
+        print(f"{n} Result: \
+        \n    Profits with crons    = {cronProfits} \
+        \n    Profits without crons = {noCronProfits}")
+
+def accessory_count():
+    #Stacks =  number : chance
+    #   Pri =  22 : .72, 58 : .90
+    #   Duo =  42 : .504, 80 : .58
+    #   Tri =  44 : .405, 110 : .504
+    #   Tet =  110 : .30, 130 : .31
+    #   Pen =  255 : .1325, 275 : .1425
+
+    successRates = [.9,.58,.504,.31,.1425]
+    downgradeChance = 0.4
+
+    averageTaps = []
+
+    numRuns = 100000
+
+    for s in range(len(successRates)):
+        accessoryCounter = 0
+        for x in range(numRuns):
+            result = ""
+            if len(averageTaps) > 0:
+                accessoryCounter += averageTaps[s-1]
+            else:
+                accessoryCounter += 1
+            while result != "success":
+                result = accessory_tap(successRates[s], downgradeChance)
+                accessoryCounter += 1
+                if result == "downgrade":
+                    if len(averageTaps) == 1:
+                        accessoryCounter += (averageTaps[s-1] - 1)
+                    if len(averageTaps) > 1:
+                        accessoryCounter += (averageTaps[s-1] - averageTaps[s-2])
+        averageTaps.append(accessoryCounter/numRuns)
+        print(f"average accessories for {s}: {averageTaps[s]}       *Success Rate: {successRates[s]}")
+
+    print(f"Accessory Counts: {averageTaps}")
 
 
 def boss_gear():
@@ -78,7 +152,8 @@ if __name__ == "__main__":
     print("Select Type: \
     \n1. T9 & T10 Horse \
     \n2. Accessories \
-    \n3. Boss Gear")
+    \n3. Accessory Count \
+    \n4. Boss Gear")
 
     while True:
         userSelection = input("Input: ")
@@ -89,6 +164,9 @@ if __name__ == "__main__":
             accessory()
             break
         elif userSelection == "3":
+            accessory_count()
+            break
+        elif userSelection == "4":
             boss_gear()
             break
         else:
